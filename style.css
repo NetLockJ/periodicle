@@ -6,6 +6,7 @@ td {
   font-family: "Consalas", monospace;
   border-radius: 3px;
   text-align: center;
+  user-select: none;
 }
 
 #element-selector {

@@ -29,7 +29,7 @@ window.onload = function () {
       }
 
       // shuffle elements list
-      for (var i = elementsList.children.length; i >= 0; i--) {
+      for (i = elementsList.children.length; i >= 0; i--) {
         elementsList.appendChild(elementsList.children[Math.random() * i | 0]);
       }
         
