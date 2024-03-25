@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Periodicle</title>
+    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+  </head>
+  <body>
+    <div id="main-div">
+      <table id="periodic-table"></table>
+      <div id="guesser">
+        <input
+          list="elements"
+          id="element-selector"
+          style="border-radius: 3px"
+        />
+        <datalist id="elements"></datalist>
+        <button
+          onclick="guess()" id="guess-button"
+        >
+          Guess!
+        </button>
+      </div>
+
+      <div id="reveal"><div>
+    </div>
+  </body>
+</html>
