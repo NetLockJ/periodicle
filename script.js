@@ -5,8 +5,10 @@ const periodicTable = document.getElementById("periodic-table");
 const elementToNumber = new Map();
 
 var hiddenElement = null;
+var guessedElements = [];
 var guesses = 0;
 
+// guess also on enter
 document.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     guess();
@@ -26,19 +28,30 @@ window.onload = function () {
         elementToNumber.set(elementsJSON.elements[i].name, i);
       }
 
-      hiddenElement = elementsJSON.elements[(Math.random() * 118) | 0].name;
+      hiddenElement = getRandomElement();
 
       buildPeriodicTable();
     });
 };
 
+/**
+ * Guesses the element in the input
+ */
 function guess() {
-  guesses++;
+  elementInput.value =
+    elementInput.value.charAt(0).toUpperCase() +
+    elementInput.value.substring(1);
+
   if (elementToNumber.has(elementInput.value)) {
     reveal();
 
+    if (!guessedElements.includes(elementInput.value)) {
+      guesses++;
+    }
+
     if (elementInput.value == hiddenElement) {
-      document.getElementById("reveal").innerHTML = "Yay! You got " + hiddenElement + " in " + guesses + " guesses!";
+      document.getElementById("reveal").innerHTML =
+        "Congratulations! You got " + hiddenElement + " in " + guesses + " guesses!";
       revealAll();
     }
 
@@ -46,15 +59,32 @@ function guess() {
   }
 }
 
+/**
+ * Gets all the data about the element
+ * @param {*} name Element name
+ * @returns all json data about element from 'PeriodicTableJSON.json'
+ */
 function getElementData(name) {
   return elementsJSON.elements[elementToNumber.get(name)];
 }
 
+/**
+ * Gets HTML element based on position, so gets correct element based on 
+ * x,y of peiodic table element
+ * @param {*} x x coordinate
+ * @param {*} y y coordinate
+ * @returns the HTML element
+ */
 function getElementByPosition(x, y) {
   var ret = periodicTable.getElementsByTagName("tr")[parseInt(y - 1)];
   return ret.getElementsByTagName("td")[parseInt(x - 1)];
 }
 
+/**
+ * Gets the position of the element on the periodic table
+ * @param {*} name the element's name
+ * @returns The x and y coordinate of the element
+ */
 function getElementPosition(name) {
   return { x: getElementData(name).xpos, y: getElementData(name).ypos };
 }
@@ -64,8 +94,13 @@ function revealAll() {
     elementInput.value = elementsJSON.elements[i].name;
     reveal();
   }
+
+  elementInput.value = "";
 }
 
+/**
+ * Reveals a perioic table element and sets proper color to HTML element
+ */
 function reveal() {
   var elementData = getElementData(elementInput.value);
   var tableElement = getElementByPosition(elementData.xpos, elementData.ypos);
@@ -78,12 +113,16 @@ function reveal() {
     Math.pow(gpos.x - hpos.x, 2) + Math.pow(gpos.y - hpos.y, 2)
   );
 
-  var hue = 120 * (1 - Math.pow(distance / 19, 0.45));
+  // seems to be a decent distribution of color
+  var hue = 120 * (1 - Math.pow(distance / 19, 0.42));
   var hsl = "hsl(" + hue + ", 100%, 50%";
   tableElement.style.backgroundColor = hsl;
   tableElement.style.boxShadow = "0px 0px 5px " + hsl;
 }
 
+/**
+ * Builds the periodic table based on positions in 'PeriodicTableJSON.json'
+ */
 function buildPeriodicTable() {
   var isElement = false;
   for (j = 0; j < 10; j++) {
@@ -91,10 +130,7 @@ function buildPeriodicTable() {
     for (i = 0; i < 18; i++) {
       for (e = 0; e < 118; e++) {
         var element = elementsJSON.elements[e];
-        if (
-          element.xpos == i + 1 &&
-          element.ypos == j + 1
-        ) {
+        if (element.xpos == i + 1 && element.ypos == j + 1) {
           var elementData = document.createElement("td");
           elementData.classList = "not-guessed";
           elementData.innerHTML = `<span>${element.symbol}</span>`;
@@ -103,7 +139,7 @@ function buildPeriodicTable() {
         }
       }
 
-      if(!isElement) {
+      if (!isElement) {
         currentRow.appendChild(document.createElement("td"));
       }
 
@@ -112,4 +148,14 @@ function buildPeriodicTable() {
 
     periodicTable.appendChild(currentRow);
   }
+}
+
+function getRandomElement() {
+  return elementsJSON.elements[(Math.random() * 118) | 0].name;
+}
+
+function reset() {
+  guesses = 0;
+  hiddenElement = getRandomElement();
+  guessedElements = [];
 }

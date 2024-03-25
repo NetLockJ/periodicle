@@ -40,11 +40,11 @@ span {
 }
 
 #reveal {
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Rubik";
   text-align: center;
   font-size: xx-large;
   color: #00ec00;
-  text-shadow: 0px 0px 5px#00ec00;
+  text-shadow: 0px 0px 5px #00ec00;
 }
 
 #guess-button {
