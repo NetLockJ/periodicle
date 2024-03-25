@@ -28,6 +28,11 @@ window.onload = function () {
         elementToNumber.set(elementsJSON.elements[i].name, i);
       }
 
+      // shuffle elements list
+      for (var i = elementsList.children.length; i >= 0; i--) {
+        elementsList.appendChild(elementsList.children[Math.random() * i | 0]);
+      }
+        
       hiddenElement = getRandomElement();
 
       buildPeriodicTable();
