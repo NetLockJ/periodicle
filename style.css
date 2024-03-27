@@ -3,21 +3,35 @@ body {
 }
 
 td {
+  position: relative;
   font-family: "Consalas", monospace;
   border-radius: 3px;
-  text-align: center;
   user-select: none;
+}
+
+.table-data :first-child {
+  position: absolute;
+  display: block;
+  top: 0px;
+  left: 2px;
+  font-size: 1.2vw;
+}
+
+.table-data :not(:first-child) {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: center;
+  top: 0.5vh;
+  margin-top: 1.2vmin;
+  margin-bottom: 0.5vh;
+  font-size: 2.5vw;
 }
 
 #element-selector {
   color: white;
   background-color: rgb(82, 82, 82);
   box-shadow: 1px 1px 7px #aeacac;
-}
-
-span {
-  font-size: calc(2.5vw);
-  padding: 2px;
 }
 
 .not-guessed {

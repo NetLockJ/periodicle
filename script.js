@@ -137,8 +137,11 @@ function buildPeriodicTable() {
         var element = elementsJSON.elements[e];
         if (element.xpos == i + 1 && element.ypos == j + 1) {
           var elementData = document.createElement("td");
+          var innerDiv = document.createElement("div");
           elementData.classList = "not-guessed";
-          elementData.innerHTML = `<span>${element.symbol}</span>`;
+          innerDiv.classList = "table-data";
+          innerDiv.innerHTML = `<span>${e + 1}</span><span>${element.symbol}</span>`;
+          elementData.appendChild(innerDiv);
           currentRow.appendChild(elementData);
           isElement = true;
         }
