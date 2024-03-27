@@ -52,6 +52,7 @@ function guess() {
 
     if (!guessedElements.includes(elementInput.value)) {
       guesses++;
+      guessedElements.push(elementInput.value);
     }
 
     if (elementInput.value == hiddenElement) {
