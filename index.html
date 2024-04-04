@@ -10,28 +10,27 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Titillium+Web:wght@400;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Titillium+Web:wght@400;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" href="/icons/atom-svgrepo-com.svg" />
   </head>
   <body>
-    <div id="main-div">
-      <table id="periodic-table"></table>
-      <div id="guesser">
-        <input
-          list="elements"
-          id="element-selector"
-          style="border-radius: 3px"
-        />
-        <datalist id="elements"></datalist>
-        <button
-          onclick="guess()" id="guess-button"
-        >
-          Guess!
-        </button>
-      </div>
+    <table id="periodic-table"></table>
+    <div id="guesser">
+      <input list="elements" id="element-input" />
+      <datalist id="elements"></datalist>
+      <button onclick="guess()" id="guess-button">Guess!</button>
+    </div>
 
-      <div id="reveal"><div>
+    <div
+      id="guess-display-div"
+      class="guess-bar"
+      style="width: 100%; margin: auto; display: grid;"
+    >
     </div>
   </body>
 </html>

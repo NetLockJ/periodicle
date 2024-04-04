@@ -1,7 +1,8 @@
 var elementsJSON = null;
 const elementsList = document.getElementById("elements");
-const elementInput = document.getElementById("element-selector");
+const elementInput = document.getElementById("element-input");
 const periodicTable = document.getElementById("periodic-table");
+const guessDisplay = document.getElementById("guess-display-div");
 const elementToNumber = new Map();
 
 var hiddenElement = null;
@@ -30,9 +31,11 @@ window.onload = function () {
 
       // shuffle elements list
       for (i = elementsList.children.length; i >= 0; i--) {
-        elementsList.appendChild(elementsList.children[Math.random() * i | 0]);
+        elementsList.appendChild(
+          elementsList.children[(Math.random() * i) | 0]
+        );
       }
-        
+
       hiddenElement = getRandomElement();
 
       buildPeriodicTable();
@@ -47,17 +50,20 @@ function guess() {
     elementInput.value.charAt(0).toUpperCase() +
     elementInput.value.substring(1);
 
+  elementInput.value = elementInput.value.trim();
+
   if (elementToNumber.has(elementInput.value)) {
     reveal();
 
     if (!guessedElements.includes(elementInput.value)) {
       guesses++;
       guessedElements.push(elementInput.value);
+
+      updateElementDisplay();
     }
 
     if (elementInput.value == hiddenElement) {
-      document.getElementById("reveal").innerHTML =
-        "Congratulations! You got " + hiddenElement + " in " + guesses + " guesses!";
+      // TODO: FIX ENDING!!!!
       revealAll();
     }
 
@@ -75,7 +81,7 @@ function getElementData(name) {
 }
 
 /**
- * Gets HTML element based on position, so gets correct element based on 
+ * Gets HTML element based on position, so gets correct element based on
  * x,y of peiodic table element
  * @param {*} x x coordinate
  * @param {*} y y coordinate
@@ -115,15 +121,21 @@ function reveal() {
   var hpos = getElementPosition(hiddenElement);
   var gpos = getElementPosition(elementInput.value);
 
+  var hsl = calcHSL(hpos, gpos);
+  tableElement.style.backgroundColor = hsl;
+  // tableElement.style.boxShadow = "0px 0px 5px " + hsl;
+}
+
+function calcHSL(gpos, hpos) {
   var distance = Math.sqrt(
     Math.pow(gpos.x - hpos.x, 2) + Math.pow(gpos.y - hpos.y, 2)
   );
 
   // seems to be a decent distribution of color
   var hue = 120 * (1 - Math.pow(distance / 19, 0.42));
-  var hsl = "hsl(" + hue + ", 100%, 50%";
-  tableElement.style.backgroundColor = hsl;
-  tableElement.style.boxShadow = "0px 0px 5px " + hsl;
+  var hsl = "hsl(" + hue + ", 100%, 50%)";
+
+  return hsl;
 }
 
 /**
@@ -141,7 +153,9 @@ function buildPeriodicTable() {
           var innerDiv = document.createElement("div");
           elementData.classList = "not-guessed";
           innerDiv.classList = "table-data";
-          innerDiv.innerHTML = `<span>${e + 1}</span><span>${element.symbol}</span>`;
+          innerDiv.innerHTML = `<span>${e + 1}</span><span>${
+            element.symbol
+          }</span>`;
           elementData.appendChild(innerDiv);
           currentRow.appendChild(elementData);
           isElement = true;
@@ -167,4 +181,39 @@ function reset() {
   guesses = 0;
   hiddenElement = getRandomElement();
   guessedElements = [];
+}
+
+function updateElementDisplay() {
+  var el = document.createElement("div");
+      el.style.width = periodicTable.getBoundingClientRect().width;
+      el.innerHTML = elementInput.value;
+
+      var gpos = getElementPosition(elementInput.value);
+      var hpos = getElementPosition(hiddenElement);
+
+      var hsl = calcHSL(gpos, hpos);
+
+      var distance = Math.sqrt(
+        Math.pow(gpos.x - hpos.x, 2) + Math.pow(gpos.y - hpos.y, 2)
+      );
+
+      var barPercent = ((Math.abs(distance) / Math.sqrt(373)) * 100).toFixed(0);
+
+      el.data = barPercent;
+      el.style.fontWeight = "bold";
+
+      el.style.background = `linear-gradient(to right, ${hsl} 0%, ${hsl} ${
+        100 - barPercent
+      }%, #383838 ${100 - barPercent}%, #383838 100%)`;
+      el.style.boxShadow = "0px 0px 10px " + hsl;
+
+      guessDisplay.appendChild(el);
+
+      var sorted = Array.from(guessDisplay.children).sort(
+        (a, b) => a.data - b.data
+      );
+
+      guessDisplay.innerHTML = "";
+
+      sorted.forEach((child) => guessDisplay.appendChild(child));
 }
