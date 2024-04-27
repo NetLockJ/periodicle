@@ -5,7 +5,7 @@ const periodicTable = document.getElementById("periodic-table");
 const guessDisplay = document.getElementById("guess-display-div");
 const elementToNumber = new Map();
 
-var hiddenElement = "Hydrogen";
+var hiddenElement = null;
 var guessedElements = [];
 var guesses = 0;
 
@@ -36,7 +36,7 @@ window.onload = function () {
         );
       }
 
-      // hiddenElement = getRandomElement();
+      hiddenElement = getRandomElement();
 
       buildPeriodicTable();
     });
