@@ -5,7 +5,7 @@ const periodicTable = document.getElementById("periodic-table");
 const guessDisplay = document.getElementById("guess-display-div");
 const elementToNumber = new Map();
 
-var hiddenElement = null;
+var hiddenElement = "Hydrogen";
 var guessedElements = [];
 var guesses = 0;
 
@@ -36,7 +36,7 @@ window.onload = function () {
         );
       }
 
-      hiddenElement = getRandomElement();
+      // hiddenElement = getRandomElement();
 
       buildPeriodicTable();
     });
@@ -65,10 +65,46 @@ function guess() {
     if (elementInput.value == hiddenElement) {
       // TODO: FIX ENDING!!!!
       revealAll();
+
+      shoot();
     }
 
     elementInput.value = "";
   }
+}
+
+function shoot() {
+  var end = Date.now() + 5 * 1000;
+  var colors = ["#3ec300", "#fe0700"];
+
+  (function frame() {
+    confetti({
+      particleCount: 2,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors: colors,
+    });
+    confetti({
+      particleCount: 2,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors: colors,
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+}
+
+function shootConfetti() {
+  confetti({
+    particleCount: 250,
+    spread: 100,
+    origin: { y: 1.0 },
+  });
 }
 
 /**
@@ -185,35 +221,35 @@ function reset() {
 
 function updateElementDisplay() {
   var el = document.createElement("div");
-      el.style.width = periodicTable.getBoundingClientRect().width;
-      el.innerHTML = elementInput.value;
+  el.style.width = periodicTable.getBoundingClientRect().width;
+  el.innerHTML = elementInput.value;
 
-      var gpos = getElementPosition(elementInput.value);
-      var hpos = getElementPosition(hiddenElement);
+  var gpos = getElementPosition(elementInput.value);
+  var hpos = getElementPosition(hiddenElement);
 
-      var hsl = calcHSL(gpos, hpos);
+  var hsl = calcHSL(gpos, hpos);
 
-      var distance = Math.sqrt(
-        Math.pow(gpos.x - hpos.x, 2) + Math.pow(gpos.y - hpos.y, 2)
-      );
+  var distance = Math.sqrt(
+    Math.pow(gpos.x - hpos.x, 2) + Math.pow(gpos.y - hpos.y, 2)
+  );
 
-      var barPercent = ((Math.abs(distance) / Math.sqrt(373)) * 100).toFixed(0);
+  var barPercent = ((Math.abs(distance) / Math.sqrt(373)) * 100).toFixed(0);
 
-      el.data = barPercent;
-      el.style.fontWeight = "bold";
+  el.data = barPercent;
+  el.style.fontWeight = "bold";
 
-      el.style.background = `linear-gradient(to right, ${hsl} 0%, ${hsl} ${
-        100 - barPercent
-      }%, #383838 ${100 - barPercent}%, #383838 100%)`;
-      el.style.boxShadow = "0px 0px 10px " + hsl;
+  el.style.background = `linear-gradient(to right, ${hsl} 0%, ${hsl} ${
+    100 - barPercent
+  }%, #383838 ${100 - barPercent}%, #383838 100%)`;
+  el.style.boxShadow = "0px 0px 10px " + hsl;
 
-      guessDisplay.appendChild(el);
+  guessDisplay.appendChild(el);
 
-      var sorted = Array.from(guessDisplay.children).sort(
-        (a, b) => a.data - b.data
-      );
+  var sorted = Array.from(guessDisplay.children).sort(
+    (a, b) => a.data - b.data
+  );
 
-      guessDisplay.innerHTML = "";
+  guessDisplay.innerHTML = "";
 
-      sorted.forEach((child) => guessDisplay.appendChild(child));
+  sorted.forEach((child) => guessDisplay.appendChild(child));
 }
